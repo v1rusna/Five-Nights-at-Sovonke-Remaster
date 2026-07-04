@@ -135,7 +135,7 @@ init -5 python in v1FNaSR:
                     audio.channels[name] = c
                     
                 except Exception as e:
-                    renpy.log("FNaSR | Failed to register channel '{}': {}".format(name, e))
+                    log("Failed to register channel '{}': {}".format(name, e))
                     raise
 
         @staticmethod
@@ -175,7 +175,7 @@ init -5 python in v1FNaSR:
                     data = json.load(f)
 
                 for k, v in data.items():
-                    renpy.log("FNaSR | Settings load: {} = {}".format(k, v))
+                    log("Settings load: {} = {}".format(k, v))
                     setattr(cls, k, v)
 
         @classmethod
@@ -193,10 +193,10 @@ init -5 python in v1FNaSR:
 
                 try:
                     with codecs.open(Constants.MOD_FILES_PATH + "settings.json", "w", "utf-8") as f:
-                        renpy.log("FNaSR | Settings save: {}".format(data))
+                        log("Settings save: {}".format(data))
                         f.write(json.dumps(data, indent=4, ensure_ascii=False))
                 except Exception as e:
-                    renpy.log("FNaSR | Settings save error: {}".format(e))
+                    log("Settings save error: {}".format(e))
                     with codecs.open(Constants.MOD_FILES_PATH + "settings.json", "w", "utf-8") as f:
                         f.write(json.dumps(old_data, indent=4, ensure_ascii=False))
                     raise

@@ -279,3 +279,11 @@ init -5 python in v1FNaSR:
 
             return result
 
+
+    def log(message):
+        if not message.strip():
+            return
+        try:
+            renpy.log("FNaSR | %s" % message)
+        except Exception:
+            pass

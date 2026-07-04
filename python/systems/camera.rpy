@@ -146,7 +146,7 @@ init python in v1FNaSR:
                             enemy._v1_located_at_location.append(c_id)
 
                     if len(enemy._v1_located_at_location) > 1:
-                        execute_in_main_thread(renpy.log, "FNaSR | Enemy '{}' desync detected: ...".format(enemy.tag))
+                        log("Enemy '{}' desync detected: ...".format(enemy.tag))
                         if enemy.enemy_path.location != 0:
                             enemy._v1_located_at_location = [c_id] if c_id is not None else []
                         else:

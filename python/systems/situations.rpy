@@ -3,6 +3,15 @@ init 2 python in v1FNaSR:
         _memory = set()
 
         @classmethod
+        def checker(cls, fn):
+            def wrapper(self, key):
+                result = fn(self, key)
+                if self.is_done(key):
+                    cls.add(key)
+                return result
+            return wrapper
+
+        @classmethod
         def add(cls, key):
             with lock:
                 cls._memory.add(str(key))
@@ -44,10 +53,6 @@ init 2 python in v1FNaSR:
             except Exception:
                 pass
 
-    # ──────────────────────────────────────────────
-    # Один «слот» ситуации: хранит N вариантов,
-    # при execute() выбирает случайный (с весами или без)
-    # ──────────────────────────────────────────────
 
     class Situation(object):
         def __init__(self, *variants, **kwargs):
@@ -127,6 +132,7 @@ init 2 python in v1FNaSR:
             self._indices[key]       = 0
             self._repeat_counts[key] = 0
 
+        @SituationMemory.checker
         def next_situation(self, key):
             """
             Запускает следующий слот.
@@ -151,13 +157,9 @@ init 2 python in v1FNaSR:
                         self._repeat_counts[key] += 1
                         self._indices[key] = 0
                         idx = 0
-                        if not self._repeat_counts[key] < repeat:
-                            SituationMemory.add(key)
                     else:
-                        SituationMemory.add(key)
                         return False
                 else:
-                    SituationMemory.add(key)
                     return False
 
             slot = slots[idx]
@@ -167,13 +169,6 @@ init 2 python in v1FNaSR:
                 slot()
 
             self._indices[key] += 1
-
-            if idx >= len(slots):
-                if isinstance(repeat, int) and repeat > 0:
-                    if not self._repeat_counts[key] < repeat:
-                        SituationMemory.add(key)
-                else:
-                    SituationMemory.add(key)
 
             return True
 
@@ -191,8 +186,12 @@ init 2 python in v1FNaSR:
             if key not in self._situations:
                 return True
             data = self._situations[key]
+
+            repeat = data["repeat"]
+            if isinstance(repeat, int):
+                repeat = repeat > self._repeat_counts[key]
             return (self._indices[key] >= len(data["slots"])
-                    and not data["repeat"])
+                    and not repeat)
 
         def _skip_situation(self, key):
             key = str(key)
@@ -205,9 +204,6 @@ init 2 python in v1FNaSR:
                 self._repeat_counts[key] = repeat+1
 
 
-    # ──────────────────────────────────────────────
-    # Пример использования
-    # ──────────────────────────────────────────────
     def _make_voice_action(sound_key, say_method, delay=1):
         def action():
             def _play():
@@ -240,9 +236,6 @@ init 2 python in v1FNaSR:
     situation = SituationManager()
 
 
-
-
-        
 
     situation.create("ulyana.try_attack", _make_voice_action("5", renpy.store.v1FNaSRSay.ulyana_try_attack_text_5.start), lambda: None)
     situation.create("ulyana.lose_attack",

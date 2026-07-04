@@ -121,7 +121,7 @@ init -100 python in v1FNaSR:
 
                 self._initialized = True
             except Exception as e:
-                renpy.log("FNaSR | Error initializing V1ResFNaSR: %s" % e)
+                log("Error initializing V1ResFNaSR: %s" % e)
 
         # -------------------------------------------------------
 

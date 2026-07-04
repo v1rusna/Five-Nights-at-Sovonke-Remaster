@@ -21,9 +21,7 @@ init python in v1FNaSR:
                 return
 
             if self._idx >= len(self._current):
-                renpy.log(
-                    "FNaSR | VoiceCharacter: аудио закончились (idx={}, total={})".format(self._idx, len(self._current))
-                )
+                log("VoiceCharacter: аудио закончились (idx={}, total={})".format(self._idx, len(self._current)))
                 return
             renpy.music.play(self._current[self._idx], channel="v1_character_voice_FNaSR")
             self._idx += 1

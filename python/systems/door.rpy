@@ -31,7 +31,7 @@ init -5 python in v1FNaSR:
 
         def set_max_panic(self, value):
             value = int(value)
-            if value > 0:
+            if value > 0 or True:
                 self.__max_panic = value
             if self.panic > self.__max_panic:
                 self.panic = self.__max_panic
@@ -52,8 +52,8 @@ init -5 python in v1FNaSR:
 
             status = bool(status)
 
-            global_event.emit("door_system.door_use", status)
             self._is_open = not status
+            global_event.emit("door_system.door_use", status)
 
             if status:
                 execute_in_main_thread(renpy.play, renpy.store.sfx_door_squeak_light, "sound")

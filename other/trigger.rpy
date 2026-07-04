@@ -133,7 +133,7 @@ init python in v1FNaSR:
                     return 1.0
                 return float(scale)
             except:
-                renpy.log("FNaSR | Error in time_scale_fn: {}".format(traceback.format_exc()))
+                log("Error in time_scale_fn: {}".format(traceback.format_exc()))
                 return 1.0
 
         def _update_scaled_time(self):
@@ -211,7 +211,7 @@ init python in v1FNaSR:
                             self._update_scaled_time()
                             continue
                     except:
-                        renpy.log("FNaSR | Error in continue_condition: {}".format(traceback.format_exc()))
+                        log("Error in continue_condition: {}".format(traceback.format_exc()))
 
                 # Обновляем масштабируемое время
                 now = self._update_scaled_time()
@@ -246,7 +246,7 @@ init python in v1FNaSR:
                                 self.remove_trigger(tr)
                     except:
                         # Ошибки не ломают менеджер
-                        renpy.log("FNaSR | Error in Trigger '{}': {}".format(tr.name, traceback.format_exc()))
+                        log("Error in Trigger '{}': {}".format(tr.name, traceback.format_exc()))
                         # удаляем проблемный триггер
                         self.remove_trigger(tr)
 
