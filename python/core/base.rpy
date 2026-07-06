@@ -32,44 +32,9 @@ init -5 python in v1FNaSR:
 
     execute_in_main_thread = renpy.store.v1rus.execute_in_main_thread # Функция для исполнения кода в главном потоке (например взаимодействия с UI)
 
-    #class _FNaSRMeta(type):
-    #    def __init__(cls, name, bases, attrs):
-    #        super(_FNaSRMeta, cls).__init__(name, bases, attrs)
-    #        if name != "FNaSRBase":
-    #            if cls not in FNaSRBase.subclasses["all"]:
-    #                FNaSRBase.subclasses["all"].append(cls)
-    #            if name != "all":
-    #                FNaSRBase.subclasses[name] = cls
-
     class FNaSRBase(renpy.python.RevertableObject):
-        #__metaclass__ = _FNaSRMeta
-        #subclasses = {"all": []}
-
         def update(self): pass
         def reset(self): pass
-
-    #class InfoObject(FNaSRBase):
-    #    __slots__ = ("_data",)
-    #    __allowed_attrs__ = None  # None = любые, set = whitelist
-    #    def __init__(self, **kwargs):
-    #        object.__setattr__(self, "_data", {})
-    #        for name, value in kwargs.items():
-    #            self._validate_attr(name)
-    #            self._data[name] = value
-    #    def _validate_attr(self, name):
-    #        if name.startswith("_"):
-    #            raise AttributeError("Private attributes are forbidden")
-    #        allowed = self.__allowed_attrs__
-    #        if allowed is not None and name not in allowed:
-    #            raise AttributeError("Attribute '{}' is not allowed".format(name))
-    #    def __getattr__(self, item):
-    #        try:
-    #            return self._data[item]
-    #        except KeyError:
-    #            raise AttributeError(item)
-    #    def __setattr__(self, key, value):
-    #        self._validate_attr(key)
-    #        self._data[key] = value
 
 
 

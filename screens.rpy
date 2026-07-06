@@ -472,6 +472,7 @@ screen V1MainMenuSettingsFNaSR:
     $ bar_full = Frame(v1resFNaSR.images.other["bar_full"],36,36)
 
     $ setting_history = "не пропускать" if v1FNaSR.Settings.view_story else "пропускать"
+    $ situations_history = "показывать" if v1FNaSR.Settings.view_situations else "пропускать"
     $ game_difficulty = v1FNaSR.Settings.game_difficulty
 
     key "mouseup_3" action Function(mm.screen_switching, "V1MainMenuSettingsFNaSR", "V1MainMenuFNaSR")
@@ -505,6 +506,8 @@ screen V1MainMenuSettingsFNaSR:
             )
 
         textbutton mm.text("Сюжет: {}".format(setting_history)) background None hover_sound v1resFNaSR.sounds.ui["button_h"] activate_sound v1resFNaSR.sounds.ui["button_c"] xalign 0.5 action SetField(v1FNaSR.Settings, "view_story", not v1FNaSR.Settings.view_story)
+
+        textbutton mm.text("Ситуации: {}".format(situations_history)) background None hover_sound v1resFNaSR.sounds.ui["button_h"] activate_sound v1resFNaSR.sounds.ui["button_c"] xalign 0.5 action SetField(v1FNaSR.Settings, "view_situations", not v1FNaSR.Settings.view_situations)
 
         textbutton mm.text("Сложность: {}".format(game_difficulty)) background None hover_sound v1resFNaSR.sounds.ui["button_h"] activate_sound v1resFNaSR.sounds.ui["button_c"] xalign 0.5 action Function(mm.screen_switching, "V1MainMenuSettingsFNaSR", "V1MainMenuSettingsDifficultyFNaSR")
 

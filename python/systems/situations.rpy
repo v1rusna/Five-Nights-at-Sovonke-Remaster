@@ -1,4 +1,12 @@
 init 2 python in v1FNaSR:
+    def situations_setting_checker(fn):
+        """Можно было запихнуть в SituationMemory.checker но тогда он будет иметь слишком много обязанностей, так нельзя"""
+        def wrapper(*args, **kwargs):
+            if not Settings.view_situations:
+                return
+            return fn(*args, **kwargs)
+        return wrapper
+
     class SituationMemory:
         _memory = set()
 
@@ -47,9 +55,10 @@ init 2 python in v1FNaSR:
         @classmethod
         def load_setting(cls, list_s):
             try:
-                for s in list_s:
-                    situation._skip_situation(s)
-                    self.add(s)
+                with lock:
+                    for s in list(list_s):
+                        situation._skip_situation(s)
+                        self.add(s)
             except Exception:
                 pass
 
@@ -132,6 +141,7 @@ init 2 python in v1FNaSR:
             self._indices[key]       = 0
             self._repeat_counts[key] = 0
 
+        @situations_setting_checker
         @SituationMemory.checker
         def next_situation(self, key):
             """

@@ -157,10 +157,11 @@ init -5 python in v1FNaSR:
 
             if not os.path.isfile(Constants.MOD_FILES_PATH + "settings.json"):
                 default_settings = {
-                    "nights_gone": dict(),
+                    "nights_gone": {},
                     "game_difficulty": GameDifficulty.NORMAL,
                     "view_story": True,
-                    "situations_memory": []
+                    "situations_memory": [],
+                    "view_situations": True
                 }
 
                 with codecs.open(Constants.MOD_FILES_PATH + "settings.json", "w", "utf-8") as f:
@@ -201,15 +202,6 @@ init -5 python in v1FNaSR:
                         f.write(json.dumps(old_data, indent=4, ensure_ascii=False))
                     raise
 
-        #@classmethod
-        #def start_auto_save(cls, interval=60):
-        #    def auto_save_fn():
-        #        while True:
-        #            time.sleep(interval)
-        #            cls.save()
-        #    cls.autosave_thread = Tools.start_thread(target=auto_save_fn, name="v1FNaSRAutoSaveThread")
-        #    cls.autosave_thread.setDaemon(True)
-
         @classmethod
         def process_settings(cls):
             for k in dir(cls):
@@ -239,12 +231,18 @@ init -5 python in v1FNaSR:
                 if not hasattr(cls, "situations_memory"):
                     cls.situations_memory = []
 
+                if not hasattr(cls, "view_situations"):
+                    cls.view_situations = True
+
 
                 if not isinstance(cls.game_difficulty, Difficulty):
                     cls.game_difficulty = GameDifficulty.NORMAL
 
                 if not isinstance(cls.view_story, bool):
                     cls.view_story = True
+
+                if not isinstance(cls.view_situations, bool):
+                    cls.view_situations = True
 
         def __init__(self):
             raise RuntimeError("Settings is a static class and cannot be instantiated.")
@@ -337,26 +335,23 @@ init -5 python in v1FNaSR:
         __is_replace = False
         @classmethod
         def _replace(cls):
-            if cls.__is_replace:
-                #renpy.display.screen.screens[("game_menu_selector", None)] = renpy.display.screen.screens[("v1FNaSR_old_game_menu_selector", None)]
-                renpy.display.screen.screens[("save", None)] = renpy.display.screen.screens[("v1FNaSR_old_save", None)]
-                renpy.display.screen.screens[("load", None)] = renpy.display.screen.screens[("v1FNaSR_old_load", None)]
-                renpy.display.screen.screens[("say", None)] = renpy.display.screen.screens[("v1FNaSR_old_say", None)]
-                cls.__is_replace = False
-            else:
-                #renpy.display.screen.screens[("v1FNaSR_old_game_menu_selector", None)] = renpy.display.screen.screens[("game_menu_selector", None)]
-                #renpy.display.screen.screens[("game_menu_selector", None)] = renpy.display.screen.screens[("V1GameMenuSelectorFNaSR", None)]
+            with lock:
+                if cls.__is_replace:
+                    renpy.display.screen.screens[("save", None)] = renpy.display.screen.screens[("v1FNaSR_old_save", None)]
+                    renpy.display.screen.screens[("load", None)] = renpy.display.screen.screens[("v1FNaSR_old_load", None)]
+                    renpy.display.screen.screens[("say", None)] = renpy.display.screen.screens[("v1FNaSR_old_say", None)]
+                    cls.__is_replace = False
+                else:
+                    renpy.display.screen.screens[("v1FNaSR_old_save", None)] = renpy.display.screen.screens[("save", None)]
+                    renpy.display.screen.screens[("save", None)] = renpy.display.screen.screens[("V1SaveLoadScreenFNaSR", None)]
 
-                renpy.display.screen.screens[("v1FNaSR_old_save", None)] = renpy.display.screen.screens[("save", None)]
-                renpy.display.screen.screens[("save", None)] = renpy.display.screen.screens[("V1SaveLoadScreenFNaSR", None)]
+                    renpy.display.screen.screens[("v1FNaSR_old_load", None)] = renpy.display.screen.screens[("load", None)]
+                    renpy.display.screen.screens[("load", None)] = renpy.display.screen.screens[("V1SaveLoadScreenFNaSR", None)]
 
-                renpy.display.screen.screens[("v1FNaSR_old_load", None)] = renpy.display.screen.screens[("load", None)]
-                renpy.display.screen.screens[("load", None)] = renpy.display.screen.screens[("V1SaveLoadScreenFNaSR", None)]
+                    renpy.display.screen.screens[("v1FNaSR_old_say", None)] = renpy.display.screen.screens[("say", None)]
+                    renpy.display.screen.screens[("say", None)] = renpy.display.screen.screens[("V1SayScreenFNaSR", None)]
 
-                renpy.display.screen.screens[("v1FNaSR_old_say", None)] = renpy.display.screen.screens[("say", None)]
-                renpy.display.screen.screens[("say", None)] = renpy.display.screen.screens[("V1SayScreenFNaSR", None)]
-
-                cls.__is_replace = True
+                    cls.__is_replace = True
 
         @staticmethod
         def _activities_all_pioneer(activity):
