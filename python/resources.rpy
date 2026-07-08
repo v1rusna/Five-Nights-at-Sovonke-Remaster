@@ -236,8 +236,14 @@ init -100 python in v1FNaSR:
 
 
 init:
+    $ v1FNaSR.UtilsAdapter.init()
+
+    image v1_ui_monitor_button_FNaSR = v1FNaSR.Adapter.scale_image(v1resFNaSR.images.other["FNaG_Monitor_Button"], 537, 47)
+    image v1_ui_bulb_on_FNaSR = v1FNaSR.Adapter.scale_image(v1resFNaSR.images.other["bulb_on"], 231, 47)
+    image v1_ui_bulb_off_FNaSR = v1FNaSR.Adapter.scale_image(v1resFNaSR.images.other["bulb_off"], 231, 47)
+
     image bg v1_view_train_window_FNaSR = v1resFNaSR.images.bg["v1_view_train_window"]
-    image bg v1_checkpoint_FNaSR = im.Scale(v1resFNaSR.images.bg["v1_checkpoint"], 1920, 1080)
+    image bg v1_checkpoint_FNaSR = v1FNaSR.Adapter.scale_image(v1resFNaSR.images.bg["v1_checkpoint"], 1920, 1080)
     image bg v1_ext_houses_night_FNaSR = v1resFNaSR.images.bg["ext_houses_night"]
     image bg v1_int_house_of_mt_sunset_parallax_FNaSR = v1FNaSRDisplay.Parallax(
         displayable="images/bg/int_house_of_mt_sunset.jpg",

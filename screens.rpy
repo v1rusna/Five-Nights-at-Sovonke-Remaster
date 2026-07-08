@@ -17,16 +17,16 @@ screen V1MainScreenFNaSR():
 
     if game.mainL.is_tablet:
         key "K_SPACE" action Function(game.camera_system.act_cameras)
-        imagebutton:
-            align (0.5, 0.9)
-            idle v1resFNaSR.images.other["FNaG_Monitor_Button"]
-            #action Function(game.camera_system.act_cameras)
         button:
             align(0.5, 1.0)
-            background None
-            xsize 700
+            #background None
+            xsize 600
             ysize 200
             action Function(game.camera_system.act_cameras)
+        imagebutton:
+            align (0.5, 0.9)
+            idle "v1_ui_monitor_button_FNaSR"#v1resFNaSR.images.other["FNaG_Monitor_Button"]
+            #action Function(game.camera_system.act_cameras)
 
 # Экран офиса
 screen V1OfficeScreenFNaSR(game):
@@ -37,13 +37,13 @@ screen V1OfficeScreenFNaSR(game):
 
     if game.mainL.is_bulb and not game.camera_system.animation:
         imagebutton:
-            align (0.3, 0.9)
-            idle (v1resFNaSR.images.other["bulb_on"] if game.mainL.bulb else v1resFNaSR.images.other["bulb_off"])
+            align (0.25, 0.9)
+            idle ("v1_ui_bulb_on_FNaSR" if game.mainL.bulb else "v1_ui_bulb_off_FNaSR")#(v1resFNaSR.images.other["bulb_on"] if game.mainL.bulb else v1resFNaSR.images.other["bulb_off"])
             action Function(game.mainL.set_bulb, not game.mainL.bulb)
 
     if game.mainL.is_door:
         text game.door_system.get_text() style "v1_text_24_style_FNaSR" align (0.9, 0.4)
-        add game.door_system.door_ImageButton align (0.9, 0.45)
+        add game.door_system.door_ImageButton align (0.9, 0.5)
 
 # Экран камеры
 screen V1CamerasScreenFNaSR(game):
