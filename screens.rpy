@@ -402,14 +402,14 @@ screen V1MainMenuFrameFNaSR(s=True, show_enemy=None, night=None, time="23:57"):
         #            $ x, y, w, h = cam.coordinates
         #            hotspot(x, y, w, h) action (Function(mm.restart_screen), Function(mm.set_bg, cam.image))
 
-    textbutton mm.text("v1rus team") background None align(0.0185, 0.97) hover_sound v1resFNaSR.sounds.ui["button_h"] activate_sound v1resFNaSR.sounds.ui["button_c"] action OpenURL("https://t.me/+VewEitmB66k0MmQy")
+    textbutton mm.text("v1rus team") background None align(0.0185, 0.971) hover_sound v1resFNaSR.sounds.ui["button_h"] activate_sound v1resFNaSR.sounds.ui["button_c"] action OpenURL("https://t.me/+VewEitmB66k0MmQy")
+    textbutton mm.text("<- telegram") background None align(0.12, 0.97)
 
 
 screen V1MainMenuFNaSR:
     tag v1menuFNaSR
 
-    default start_action = (Hide('V1MainMenuFNaSR'), Jump('v1_play_FNaSR')) #if v1FNaSR.UtilsAdapter.ES else Start()
-    default exit_action = (Hide('V1MainMenuFNaSR'), Jump('v1_exit_mm_FNaSR')) if v1FNaSR.UtilsAdapter.ES else ShowMenu("V1ConfirmationScreenFNaSR", "Вы уверены что хотите выйти?", Quit(False), Return(), screen_call="V1MainMenuFNaSR")
+    default exit_action = (Hide('V1MainMenuFNaSR'), Jump('v1_exit_mm_FNaSR')) if v1FNaSR.UtilsAdapter.ES else ShowMenu("V1ConfirmationScreenFNaSR", "Вы уверены что хотите выйти?", Quit(False), Return(), screen_call="V1MainMenuFNaSR", use_menu_frame=True)
 
     use V1MainMenuFrameFNaSR()
     $ mm = v1FNaSR.MainMenu
@@ -418,7 +418,7 @@ screen V1MainMenuFNaSR:
     key "K_ESCAPE" action NullAction()
 
     vbox align(0.15, 0.5) spacing 15:
-        textbutton mm.text("Играть") background None hover_sound v1resFNaSR.sounds.ui["button_h"] activate_sound v1resFNaSR.sounds.ui["button_c"] action start_action
+        textbutton mm.text("Играть") background None hover_sound v1resFNaSR.sounds.ui["button_h"] activate_sound v1resFNaSR.sounds.ui["button_c"] action (Hide('V1MainMenuFNaSR'), Jump('v1_play_FNaSR'))
         textbutton mm.text("Выбор ночи") background None hover_sound v1resFNaSR.sounds.ui["button_h"] activate_sound v1resFNaSR.sounds.ui["button_c"] action Function(mm.screen_switching, "V1MainMenuFNaSR", "V1MainMenuChoiceNightFNaSR")
         textbutton mm.text("Достижения") background None hover_sound v1resFNaSR.sounds.ui["button_h"] activate_sound v1resFNaSR.sounds.ui["button_c"] action Function(mm.screen_switching, "V1MainMenuFNaSR", "V1MainMenuAchievementsFNaSR")
         textbutton mm.text("Настройки") background None hover_sound v1resFNaSR.sounds.ui["button_h"] activate_sound v1resFNaSR.sounds.ui["button_c"] action Function(mm.screen_switching, "V1MainMenuFNaSR", "V1MainMenuSettingsFNaSR")
@@ -597,12 +597,13 @@ screen V1GameMenuSelectorFNaSR:
     zorder 999
     modal True
 
-    $ game = renpy.store.v1FNaSR.game
-    $ mm = v1FNaSR.MainMenu
-
-    $ bar_null = Frame(v1resFNaSR.images.other["bar_null"],36,36)
-    $ bar_full = Frame(v1resFNaSR.images.other["bar_full"],36,36)
+    default game = renpy.store.v1FNaSR.game
+    default mm = v1FNaSR.MainMenu
     default settings = False
+    default exit_action = [Return(), Function(renpy.jump, "v1_exit_FNaSR")] if v1FNaSR.UtilsAdapter.ES else ShowMenu("V1ConfirmationScreenFNaSR", "Вы уверены что хотите выйти?", Quit(False), Return(), screen_call="V1GameMenuSelectorFNaSR")
+
+    default bar_null = Frame(v1resFNaSR.images.other["bar_null"],36,36)
+    default bar_full = Frame(v1resFNaSR.images.other["bar_full"],36,36)
 
     on "show" action [Function(game.game_time.freeze), SetField(renpy.store.v1FNaSR.Selector, "is_open", True)]
     on "hide" action [Function(game.game_time.unfreeze), SetField(renpy.store.v1FNaSR.Selector, "is_open", False)]
@@ -624,7 +625,7 @@ screen V1GameMenuSelectorFNaSR:
                     activate_sound v1resFNaSR.sounds.ui["button_c"]
                     action [Return(), Function(game.restart_night)]
 
-                textbutton mm.text("В меню мода"):
+                textbutton mm.text("В меню"):
                     background None xalign 0.5
                     hover_sound v1resFNaSR.sounds.ui["button_h"]
                     activate_sound v1resFNaSR.sounds.ui["button_c"]
@@ -640,7 +641,7 @@ screen V1GameMenuSelectorFNaSR:
                 background None xalign 0.5
                 hover_sound v1resFNaSR.sounds.ui["button_h"]
                 activate_sound v1resFNaSR.sounds.ui["button_c"]
-                action [Return(), Function(renpy.jump, "v1_exit_FNaSR")]
+                action exit_action
         else:
             for volume_type, label in (("music volume", "Музыка"), ("sound volume", "Звуки"), ("voice volume", "Эмбиент")):
                 add mm.text(label) xalign 0.5

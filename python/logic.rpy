@@ -130,12 +130,12 @@ init 11 python in v1FNaSR:
             self._init_state()
 
             Settings.process_settings()
+            Settings.normalize_settings()
 
             if Settings.game_difficulty is None:
                 Settings.game_difficulty = GameDifficulty.NORMAL
                 Settings.save()
 
-            Settings.normalize_settings()
 
             SituationMemory.load_setting(Settings.situations_memory)
 
@@ -145,7 +145,7 @@ init 11 python in v1FNaSR:
         def quit_mod(self):
             Settings.save()
 
-            renpy.store._preferences.gl_powersave = getattr(self, "old_gl_performance_mode", False)
+            renpy.store.preferences.gl_powersave = getattr(self, "old_gl_performance_mode", False)
             renpy.store.config.image_cache_size_mb = 300
 
             renpy.store.config.window_title = "Бесконечное лето"

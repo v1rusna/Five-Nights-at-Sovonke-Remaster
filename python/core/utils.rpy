@@ -148,24 +148,35 @@ init 5 python in v1FNaSR:
     class Settings(object):
         _settings_handler = [lambda k, v: v if k != "game_difficulty" else GameDifficulty(v)]
 
-        @staticmethod
-        def _init_settings():
+        _MISSING = object()
+
+        @classmethod
+        def _init_settings(cls):
+            cls._default_settings = {
+                "nights_gone": {},
+                "game_difficulty": GameDifficulty.NORMAL,
+                "view_story": True,
+                "situations_memory": [],
+                "view_situations": True
+            }
+
             try:
                 os.makedirs(Constants.MOD_FILES_PATH)
             except:
                 pass
 
             if not os.path.isfile(Constants.MOD_FILES_PATH + "settings.json"):
-                default_settings = {
-                    "nights_gone": {},
-                    "game_difficulty": GameDifficulty.NORMAL,
-                    "view_story": True,
-                    "situations_memory": [],
-                    "view_situations": True
-                }
-
                 with codecs.open(Constants.MOD_FILES_PATH + "settings.json", "w", "utf-8") as f:
-                    f.write(json.dumps(default_settings, indent=4, ensure_ascii=False))
+                    f.write(json.dumps(cls._default_settings, indent=4, ensure_ascii=False))
+
+        @classmethod
+        def _validate_settings(cls):
+            for name, value in cls._default_settings:
+                if getattr(cls, name, _MISSING) == _MISSING:
+                    setattr(cls, name, value)
+
+                if not isinstance(getattr(cls, name), value):
+                    setattr(cls, name, value)
 
         @classmethod
         def load(cls):

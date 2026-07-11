@@ -228,6 +228,8 @@ init 10 python in v1FNaSR:
 
     renpy.music.register_channel("v1_noise_FNaSR", mixer="sound", loop=True)
 
+    renpy.music.register_channel("sound2", mixer="sound")
+
     for im_name in resources.images.bg.list_files():
         resources.images.bg.add_file(im_name, Adapter.scale_image(resources.images.bg[im_name], 1920, 1080))
 

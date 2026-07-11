@@ -7,6 +7,7 @@ label v1_init_FNaSR:
     $ v1FNaSR.game.start_mod()
 
     $ config.quit_callbacks.append(v1FNaSR.game.stop_game_loop)
+    $ config.quit_callbacks.append(v1FNaSR.game.quit_mod)
 
     $ renpy.block_rollback()
 
@@ -17,14 +18,16 @@ label v1_main_menu_FNaSR:
     $ v1FNaSR.game.reset()
 
     $ renpy.block_rollback()
-    $ v1FNaSR.game.stop_game_loop()
     show anim v1_tablet_open_entire_FNaSR
     $ renpy.music.play(v1resFNaSR.sounds.sfx["tablet_open_2"], "sound")
     $ renpy.pause(0.18, hard=True)
     hide anim v1_tablet_open_entire_FNaSR
-    $ renpy.music.play(v1resFNaSR.sounds.sfx["camera_static_1_new"], "v1_show_camera_ambience_FNaSR", loop=True, fadein=0.5)
+    $ renpy.music.play(v1resFNaSR.sounds.sfx["camera_static_1_new"], "music", loop=True, fadein=0.5)
+
+label v1_main_menu_loop_FNaSR:
     show screen V1MainMenuFNaSR
     $ renpy.pause(hard=True)
+    jump v1_main_menu_loop_FNaSR
 
 label v1_game_FNaSR(game=None):
     if game is None:

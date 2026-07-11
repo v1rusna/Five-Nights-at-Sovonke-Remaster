@@ -1,4 +1,4 @@
-init 5 python in v1FNaSR:
+init python in v1FNaSR:
     import threading
     import random
     import math
@@ -170,8 +170,8 @@ init 5 python in v1FNaSR:
 
     class DebugInfo(object):
         def __init__(self, name=None, color=None, obj=None, additional_info=None):
-            self.color = str(color)
             self.name = str(name)
+            self.color = str(color)
             self.obj = obj
             self.additional_info = additional_info
             if self.additional_info is not None:
@@ -246,9 +246,9 @@ init 5 python in v1FNaSR:
 
 
     def log(message):
-        if not message.strip():
-            return
         try:
+            if not message.strip():
+                return
             renpy.log("FNaSR | %s" % message)
         except Exception:
             pass

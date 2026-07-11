@@ -14,7 +14,7 @@ label v1_night_1_history_win_label_FNaSR:
     hide black with dissolve
     $ renpy.block_rollback()
     $ renpy.pause(1.0, hard=True)
-    $ renpy.music.play(v1resFNaSR.sounds.sfx["call"], "ambience")
+    $ renpy.music.play(v1resFNaSR.sounds.sfx["call"], "sound2")
     pause 0.5
     play sound [sfx_bed_squeak2, sfx_body_bump]
     $ renpy.block_rollback()
