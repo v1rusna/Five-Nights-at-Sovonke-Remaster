@@ -1,4 +1,4 @@
-init 1 python in v1FNaSRSay:
+init 11 python in v1FNaSRSay:
 
     FNaSRBase = renpy.store.v1FNaSR.FNaSRBase
     lock = renpy.store.v1FNaSR.lock

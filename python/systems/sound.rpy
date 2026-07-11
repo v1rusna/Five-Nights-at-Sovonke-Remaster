@@ -1,4 +1,4 @@
-init -5 python in v1FNaSR:
+init 5 python in v1FNaSR:
     class SoundRandomGenerator(FNaSRBase):
         """Генератор случайных звуков."""
         __is_init = False

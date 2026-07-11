@@ -1,4 +1,4 @@
-init python in v1FNaSR:
+init 11 python in v1FNaSR:
     class QTEBlockException(Exception): pass
 
     class QTEVisual(ConstantBase):

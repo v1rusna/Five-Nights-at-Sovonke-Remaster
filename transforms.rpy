@@ -1,4 +1,4 @@
-init -20 python:
+init 10 python:
     import math
 
     def v1_button_static_hover_func_FNaSR(t_obj, st, at):
@@ -61,7 +61,7 @@ init -20 python:
         
         return 0.0  # Продолжаем обновление
 
-init -20:
+init 11:
     transform v1_align_FNaSR(x=0.0, y=0.0):
         align(x,y)
 

@@ -1,4 +1,4 @@
-init -5 python in v1FNaSR:
+init 5 python in v1FNaSR:
     class State(FNaSRBase):
         _state_handler = {}
 

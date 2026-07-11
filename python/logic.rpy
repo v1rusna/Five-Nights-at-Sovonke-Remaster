@@ -1,4 +1,4 @@
-init 1 python in v1FNaSR:
+init 11 python in v1FNaSR:
     """
     Пространство имён мода FNaSR - Five Nights at Sovenk Remaster
     """
@@ -145,7 +145,7 @@ init 1 python in v1FNaSR:
         def quit_mod(self):
             Settings.save()
 
-            renpy.store._preferences.gl_powersave = self.old_gl_performance_mode
+            renpy.store._preferences.gl_powersave = getattr(self, "old_gl_performance_mode", False)
             renpy.store.config.image_cache_size_mb = 300
 
             renpy.store.config.window_title = "Бесконечное лето"

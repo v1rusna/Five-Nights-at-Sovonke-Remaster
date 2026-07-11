@@ -1,4 +1,4 @@
-init python in v1FNaSR:
+init 10 python in v1FNaSR:
     try:
         from builtins import map as v1_map
     except:

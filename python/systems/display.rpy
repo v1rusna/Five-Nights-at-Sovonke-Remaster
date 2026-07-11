@@ -1,4 +1,4 @@
-init -5 python in v1FNaSR:
+init 5 python in v1FNaSR:
     class ObjectDisplaySystem(FNaSRBase):
         def __init__(self, default_layer="master"):
             self.items = {}  # key -> item dict (см. ниже)

@@ -1,8 +1,8 @@
-init -5 python in v1FNaSR:
+init 5 python in v1FNaSR:
     class MainLocation(FNaSRBase):
         def __init__(self):
             self.is_bulb = True
-            self.is_tablet = True
+            self.has_tablet = True
             self.is_door = True
 
             self.bulb = True
@@ -72,12 +72,12 @@ init -5 python in v1FNaSR:
             self.img_main_loc.displayable = self.__images[self.bulb]
 
         def update(self):
-            if not self.is_tablet:
+            if not self.has_tablet:
                 self.hide_tablet_button()
 
         def reset(self):
             self.is_bulb = True
-            self.is_tablet = True
+            self.has_tablet = True
             self.is_door = True
 
             self.bulb = True

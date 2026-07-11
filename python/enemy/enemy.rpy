@@ -1,4 +1,4 @@
-init python in v1FNaSR:
+init 11 python in v1FNaSR:
 
     class UlyanaEnemy(EnemyAttackBase):
         def __init__(self, **k):
@@ -1116,7 +1116,7 @@ init python in v1FNaSR:
             self.is_start_qte = True
 
             self._is_bulb = game.mainL.is_bulb
-            self._is_tablet = game.mainL.is_tablet
+            self._is_tablet = game.mainL.has_tablet
             self._is_door = game.mainL.is_door
 
             key = self.get_random_key()
@@ -1128,7 +1128,7 @@ init python in v1FNaSR:
         def on_qte_success(self):
             try:
                 game.mainL.is_bulb =  self._is_bulb
-                game.mainL.is_tablet =  self._is_tablet
+                game.mainL.has_tablet =  self._is_tablet
                 game.mainL.is_door =  self._is_door
             except Exception:
                 pass

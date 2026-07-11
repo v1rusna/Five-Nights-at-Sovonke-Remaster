@@ -1,4 +1,4 @@
-init 2 python in v1FNaSR:
+init 12 python in v1FNaSR:
     def situations_setting_checker(fn):
         """Можно было запихнуть в SituationMemory.checker но тогда он будет иметь слишком много обязанностей, так нельзя"""
         def wrapper(*args, **kwargs):

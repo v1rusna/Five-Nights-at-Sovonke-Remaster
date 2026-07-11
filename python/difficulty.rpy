@@ -1,5 +1,5 @@
 
-init python in v1FNaSR:
+init 11 python in v1FNaSR:
     class _DifficultyCallback:
         _easy_d = (
             "Легкая сложность",

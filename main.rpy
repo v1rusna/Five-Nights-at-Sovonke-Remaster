@@ -1,4 +1,4 @@
-init python:
+init 11 python:
     mods["v1_start_FNaSR"] = " {image=v1_mod_button_text_FNaSR} "
 
 label v1_init_FNaSR:
@@ -38,7 +38,7 @@ label v1_game_FNaSR(game=None):
     $ game.object_display.update_display()
     camera at v1_camera_set_center_zoom_t_FNaSR()
     
-    show screen V1MainScreenFNaSR
+    show screen V1MainScreenFNaSR(game)
     show screen V1OfficeScreenFNaSR(game)
 
     #$ v1FNaSRSay.test_say_text.start()

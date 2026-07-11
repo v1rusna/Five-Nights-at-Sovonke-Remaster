@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-init python in v1FNaSR:
+init 11 python in v1FNaSR:
     import threading
     import traceback
 

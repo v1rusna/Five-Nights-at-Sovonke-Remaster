@@ -1,4 +1,4 @@
-init python in v1FNaSR:
+init 10 python in v1FNaSR:
     class Night(FNaSRBase):
         def __init__(self, night, level=None, end_of_shift=6, player_start=None, start_callback=None, end_callback=None, start_label=None, end_label=None, always_available=False):
             end_of_shift = int(end_of_shift)
@@ -243,7 +243,7 @@ init python in v1FNaSR:
         @staticmethod
         def _6():
             game.mainL.is_bulb = False
-            game.mainL.is_tablet = False
+            game.mainL.has_tablet = False
             game.mainL.is_door = False
 
         @staticmethod
@@ -254,7 +254,7 @@ init python in v1FNaSR:
 
 
             #game.mainL.is_bulb = False
-            #game.mainL.is_tablet = False
+            #game.mainL.has_tablet = False
             #game.mainL.is_door = False
 
 

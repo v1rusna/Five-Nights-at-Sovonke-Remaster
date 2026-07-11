@@ -1,4 +1,4 @@
-init 5 python in v1FNaSRTypeWriter:
+init 11 python in v1FNaSRTypeWriter:
     """
     Честно вдохновленный и немного подредактированный модуль
     """

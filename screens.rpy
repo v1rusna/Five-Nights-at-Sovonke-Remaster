@@ -4,24 +4,25 @@ screen V1BaseUIScreenFNaSR:
     key ["K_ESCAPE", "mouseup_3"] action ShowMenu("V1GameMenuSelectorFNaSR")
 
 # Главный экран
-screen V1MainScreenFNaSR():
+screen V1MainScreenFNaSR(game):
     zorder 10
-    $ game = renpy.store.v1FNaSR.game
+    default xsize_tablet_button = int(v1FNaSR.UtilsAdapter.scale(600))
+    default ysize_tablet_button = int(v1FNaSR.UtilsAdapter.scale(200))
 
     timer 0.1 repeat True action Function(game.check_killer)
 
     use V1BaseUIScreenFNaSR()
 
     if game.debug:
-        use V1DebugScreenFNaSR()
+        use V1DebugScreenFNaSR(game)
 
-    if game.mainL.is_tablet:
+    if game.mainL.has_tablet:
         key "K_SPACE" action Function(game.camera_system.act_cameras)
         button:
             align(0.5, 1.0)
-            #background None
-            xsize 600
-            ysize 200
+            background None
+            xsize xsize_tablet_button
+            ysize ysize_tablet_button
             action Function(game.camera_system.act_cameras)
         imagebutton:
             align (0.5, 0.9)
@@ -88,10 +89,8 @@ screen V1TabletAnimScreenFNaSR(game):
     else:
         add "anim v1_tablet_close_entire_VNaSR"
 
-screen V1DebugScreenFNaSR():
+screen V1DebugScreenFNaSR(game):
     #zorder 99
-    $ game = renpy.store.v1FNaSR.game
-
     #key "ctrl_K_a" action ShowMenu("V1DebugPanelScreenFNaSR")
     key "K_a" action ShowMenu("V1DebugPanelScreenFNaSR")
 
@@ -100,7 +99,7 @@ screen V1DebugScreenFNaSR():
         #text "Размер очереди перерисовки: {}".format(len(renpy.display.render.redraw_queue)) style "v1_text_12_style_FNaSR"
         #text "Размер кэша рендера: {}".format(len(renpy.display.render.render_cache)) style "v1_text_12_style_FNaSR"
         #text "---------------" style "v1_text_12_style_FNaSR"
-        text "debug panel: ctrl + a"style "v1_text_12_style_FNaSR"
+        #text "debug panel: ctrl + a"style "v1_text_12_style_FNaSR"
         text "change: {}".format(game.camera_system.charge) style "v1_text_12_style_FNaSR"
         text "hours: {}".format(game.game_time.total_hours) style "v1_text_12_style_FNaSR"
         #text "enemy in loc: {}".format(repr(game.camera_system.get_enemy()).replace("[", "[[")) style "v1_text_12_style_FNaSR"
@@ -125,9 +124,8 @@ screen V1DebugScreenFNaSR():
             textbutton"{size=+4}>>" background None text_style "v1_text_12_style_FNaSR" xalign .5 action Function(game.game_time.set_sleep_time, game.game_time._sleep_time+1)
 
 
-screen V1DebugPanelScreenFNaSR():
+screen V1DebugPanelScreenFNaSR(game):
     default mode = None
-    $ game = renpy.store.v1FNaSR.game
 
     on "show" action Function(game.game_time.freeze)
     on "hide" action Function(game.game_time.unfreeze)
@@ -144,14 +142,12 @@ screen V1DebugPanelScreenFNaSR():
         textbutton "{size=+20}Вернуться" text_style "v1_text_12_style_FNaSR" background None align (0.1, 0.9) action SetScreenVariable("mode", None)
 
     if mode == "enemy":
-        use V1DebugPanelEnemyScreenFNaSR()
+        use V1DebugPanelEnemyScreenFNaSR(game)
 
     if mode == "game":
-        use V1DebugPanelGameScreenFNaSR()
+        use V1DebugPanelGameScreenFNaSR(game)
 
-screen V1DebugPanelEnemyScreenFNaSR():
-    $ game = renpy.store.v1FNaSR.game
-
+screen V1DebugPanelEnemyScreenFNaSR(game):
     text "{size=+5}Противниками" style "v1_text_12_style_FNaSR" align(0.5, 0.13)
 
     hbox:
@@ -223,9 +219,8 @@ screen V1DebugPanelEnemyScreenFNaSR():
 
     vbar value YScrollValue("DebugPanelEnemy") bottom_bar "images/misc/none.png" top_bar "images/misc/none.png" thumb "images/misc/none.png"
      
-screen V1DebugPanelGameScreenFNaSR():
-    $ game = renpy.store.v1FNaSR.game
-    $ panel = v1FNaSR.DebugPanel
+screen V1DebugPanelGameScreenFNaSR(game):
+    default panel = v1FNaSR.DebugPanel
 
     text "{size=+5}Игрой" style "v1_text_12_style_FNaSR" align(0.5, 0.13)
 
@@ -345,11 +340,11 @@ screen V1DebugPanelGameScreenFNaSR():
                     text_style "v1_text_16_style_FNaSR"
                     action SetField(game.mainL, "is_bulb", not game.mainL.is_bulb)
 
-                textbutton "{size=-2}"+"Механика камер {}".format("{color=#00b627}доступна{/color}" if game.mainL.is_tablet else "{color=#e60000}недоступна{/color}"):
+                textbutton "{size=-2}"+"Механика камер {}".format("{color=#00b627}доступна{/color}" if game.mainL.has_tablet else "{color=#e60000}недоступна{/color}"):
                     xalign 0.5
                     background None
                     text_style "v1_text_16_style_FNaSR"
-                    action SetField(game.mainL, "is_tablet", not game.mainL.is_tablet)
+                    action SetField(game.mainL, "has_tablet", not game.mainL.has_tablet)
 
                 textbutton "{size=-2}"+"Механика двери {}".format("{color=#00b627}доступна{/color}" if game.mainL.is_door else "{color=#e60000}недоступна{/color}"):
                     xalign 0.5
@@ -413,6 +408,9 @@ screen V1MainMenuFrameFNaSR(s=True, show_enemy=None, night=None, time="23:57"):
 screen V1MainMenuFNaSR:
     tag v1menuFNaSR
 
+    default start_action = (Hide('V1MainMenuFNaSR'), Jump('v1_play_FNaSR')) #if v1FNaSR.UtilsAdapter.ES else Start()
+    default exit_action = (Hide('V1MainMenuFNaSR'), Jump('v1_exit_mm_FNaSR')) if v1FNaSR.UtilsAdapter.ES else ShowMenu("V1ConfirmationScreenFNaSR", "Вы уверены что хотите выйти?", Quit(False), Return(), screen_call="V1MainMenuFNaSR")
+
     use V1MainMenuFrameFNaSR()
     $ mm = v1FNaSR.MainMenu
 
@@ -420,11 +418,11 @@ screen V1MainMenuFNaSR:
     key "K_ESCAPE" action NullAction()
 
     vbox align(0.15, 0.5) spacing 15:
-        textbutton mm.text("Играть") background None hover_sound v1resFNaSR.sounds.ui["button_h"] activate_sound v1resFNaSR.sounds.ui["button_c"] action(Hide('V1MainMenuFNaSR'), Jump('v1_play_FNaSR'))
+        textbutton mm.text("Играть") background None hover_sound v1resFNaSR.sounds.ui["button_h"] activate_sound v1resFNaSR.sounds.ui["button_c"] action start_action
         textbutton mm.text("Выбор ночи") background None hover_sound v1resFNaSR.sounds.ui["button_h"] activate_sound v1resFNaSR.sounds.ui["button_c"] action Function(mm.screen_switching, "V1MainMenuFNaSR", "V1MainMenuChoiceNightFNaSR")
         textbutton mm.text("Достижения") background None hover_sound v1resFNaSR.sounds.ui["button_h"] activate_sound v1resFNaSR.sounds.ui["button_c"] action Function(mm.screen_switching, "V1MainMenuFNaSR", "V1MainMenuAchievementsFNaSR")
         textbutton mm.text("Настройки") background None hover_sound v1resFNaSR.sounds.ui["button_h"] activate_sound v1resFNaSR.sounds.ui["button_c"] action Function(mm.screen_switching, "V1MainMenuFNaSR", "V1MainMenuSettingsFNaSR")
-        textbutton mm.text("Выйти") background None hover_sound v1resFNaSR.sounds.ui["button_h"] activate_sound v1resFNaSR.sounds.ui["button_c"] action (Hide('V1MainMenuFNaSR'), Jump('v1_exit_mm_FNaSR'))
+        textbutton mm.text("Выйти") background None hover_sound v1resFNaSR.sounds.ui["button_h"] activate_sound v1resFNaSR.sounds.ui["button_c"] action exit_action
 
 screen V1MainMenuChoiceNightFNaSR:
     tag v1menuFNaSR
@@ -707,16 +705,6 @@ screen V1SaveLoadScreenFNaSR:
         textbutton mm.text("Понял") background None xalign 0.5 action Return()
 
 screen V1SayScreenFNaSR:
-    #window background None id "window":
-
-        #$ timeofday = persistent.timeofday
-
-        #add get_image("gui/dialogue_box/"+timeofday+"/dialogue_box.png") xpos 174 ypos 916
-
-        #text what id "what" xpos 194 ypos 964 xmaximum 1541 size 28 line_spacing 2
-        #if who:
-        #    text who id "who" xpos 194 ypos 931 size 28 line_spacing 2
-
     text what id "what" xalign 0.5 ypos 964 xmaximum 1541 size 28 line_spacing 2
     if who:
         text who id "who" xalign 0.5 ypos 931 size 28 line_spacing 2

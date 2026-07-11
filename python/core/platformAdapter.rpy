@@ -1,4 +1,4 @@
-init -9999 python in v1FNaSR:
+init python in v1FNaSR:
 
     class UtilsAdapter(object):
 
@@ -10,18 +10,19 @@ init -9999 python in v1FNaSR:
         REAL_WIDTH = None
         REAL_HEIGHT = None
 
+        ES = True
+
         _scale = None
         _offset_x = None
         _offset_y = None
 
         @classmethod
         def init(cls):
-            """
-            Вызывается один раз после запуска игры.
-            """
-
+            cls.ES = "Everlasting" in renpy.store.config.name
             cls.REAL_WIDTH = float(renpy.config.screen_width)
             cls.REAL_HEIGHT = float(renpy.config.screen_height)
+            #cls.REAL_WIDTH = float(1280)
+            #cls.REAL_HEIGHT = float(720)
 
             scale_x = cls.REAL_WIDTH / cls.VIRTUAL_WIDTH
             scale_y = cls.REAL_HEIGHT / cls.VIRTUAL_HEIGHT
@@ -64,7 +65,7 @@ init -9999 python in v1FNaSR:
             return x, y, width, height
 
 
-    class Adapter(object):
+    class UIAdapter(object):
 
         @classmethod
         def transform(
@@ -116,4 +117,31 @@ init -9999 python in v1FNaSR:
         def scale_image(cls, image, width, height):
             width, height = UtilsAdapter.size(width, height)
             return renpy.store.im.Scale(image, int(width), int(height))
+
+    class PAdapter(object):
+        @classmethod
+        def get_mod_folder(cls):
+            if UtilsAdapter.ES:
+                return "FNaS_R"
+            return ""
+
+        @classmethod
+        def path(cls, path):
+            if UtilsAdapter.ES:
+                return path
+
+            prefix = "FNaS_R/"
+            if path.startswith(prefix):
+                return path[len(prefix):]
+            return path
+
+
+
+    class Adapter(UIAdapter, PAdapter): pass
+
+    UtilsAdapter.init()
+
+
+
+
 

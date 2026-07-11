@@ -1,4 +1,4 @@
-init -5 python in v1FNaSR:
+init 5 python in v1FNaSR:
     class Tools(FNaSRBase):
         @staticmethod
         def start_thread(*a, **k):

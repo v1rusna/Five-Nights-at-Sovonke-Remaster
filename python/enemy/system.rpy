@@ -1,4 +1,4 @@
-init python in v1FNaSR:
+init 11 python in v1FNaSR:
     class EnemySystem(FNaSRBase):
         def __init__(self):
             self.enemy_chanel = {}

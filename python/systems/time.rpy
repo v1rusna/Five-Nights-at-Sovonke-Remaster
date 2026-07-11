@@ -1,4 +1,4 @@
-init -5 python in v1FNaSR:
+init 5 python in v1FNaSR:
     class Clock(FNaSRBase):
         def __init__(self, start_hour=0):
             # Храним время как число от 0 до 23 (где 0 - это полночь)

@@ -1,4 +1,4 @@
-init -5 python in v1FNaSR:
+init 11 python in v1FNaSR:
     class Selector(FNaSRBase):
         is_show = False
         __is_start = False

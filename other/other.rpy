@@ -1,5 +1,5 @@
 
-init -100 python in v1rus:
+init python in v1rus:
     import threading
     import queue
     

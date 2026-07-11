@@ -1,4 +1,4 @@
-init 1 python in v1FNaSR:
+init 11 python in v1FNaSR:
     def _v1_generate_audio_list(core_list, start, end): return [core_list[str(i)] for i in range(start, end+1)]
 
     class CharacterVoiceList(ConstantBase):

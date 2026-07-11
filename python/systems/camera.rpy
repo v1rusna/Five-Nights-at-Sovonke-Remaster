@@ -1,4 +1,4 @@
-init python in v1FNaSR:
+init 10 python in v1FNaSR:
     class StateCameraSystem:
         TABLET_CLOSE = "tablet.close"
         TABLET_OPEN = "tablet.open"
@@ -213,11 +213,11 @@ init python in v1FNaSR:
             self.state(StateCameraSystem.TABLET_CLOSE)
 
         def __show_animation_t(self):
-            _oit = game.mainL.is_tablet
-            game.mainL.is_tablet = False
+            _oit = game.mainL.has_tablet
+            game.mainL.has_tablet = False
 
             def _h():
-                game.mainL.is_tablet = _oit
+                game.mainL.has_tablet = _oit
                 self.animation = False
             game.game_time.timer(_h, 0.18, IgnoreFreeze=True)
 

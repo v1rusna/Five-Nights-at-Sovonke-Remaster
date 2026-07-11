@@ -1,4 +1,4 @@
-init -100 python in v1FNaSR:
+init 10 python in v1FNaSR:
 
     import posixpath
 
@@ -89,7 +89,7 @@ init -100 python in v1FNaSR:
                 "sounds": ["ogg", "opus", "mp3", "wav", "flac", "m4a", "mp2", "aif", "aiff", "mod", "xm", "it", "s3m"],
                 "fonts": ["ttf", "otf"]
             }
-
+            
             # корневые папки
             self.images = Folder("images")
             self.sounds = Folder("sounds")
@@ -108,20 +108,17 @@ init -100 python in v1FNaSR:
             if self._initialized:
                 return
 
-            try:
-                files = renpy.list_files()
-                self._index_category(self.images, "images", files)
-                self._index_category(self.sounds, "sounds", files)
-                self._index_category(self.fonts,  "fonts",  files)
+            files = renpy.list_files()
+            self._index_category(self.images, "images", files)
+            self._index_category(self.sounds, "sounds", files)
+            self._index_category(self.fonts,  "fonts",  files)
 
-                # build caches
-                self.images.build_cache()
-                self.sounds.build_cache()
-                self.fonts.build_cache()
+            # build caches
+            self.images.build_cache()
+            self.sounds.build_cache()
+            self.fonts.build_cache()
 
-                self._initialized = True
-            except Exception as e:
-                log("Error initializing V1ResFNaSR: %s" % e)
+            self._initialized = True
 
         # -------------------------------------------------------
 
@@ -212,7 +209,7 @@ init -100 python in v1FNaSR:
 
 
     # Инициализация
-    resources = Resources("FNaS_R")
+    resources = Resources(Adapter.get_mod_folder())#resources = Resources("FNaS_R")
     resources.init()
     renpy.store.v1resFNaSR = resources
 
@@ -231,12 +228,12 @@ init -100 python in v1FNaSR:
 
     renpy.music.register_channel("v1_noise_FNaSR", mixer="sound", loop=True)
 
+    for im_name in resources.images.bg.list_files():
+        resources.images.bg.add_file(im_name, Adapter.scale_image(resources.images.bg[im_name], 1920, 1080))
 
 
 
-
-init:
-    $ v1FNaSR.UtilsAdapter.init()
+init 11:
 
     image v1_ui_monitor_button_FNaSR = v1FNaSR.Adapter.scale_image(v1resFNaSR.images.other["FNaG_Monitor_Button"], 537, 47)
     image v1_ui_bulb_on_FNaSR = v1FNaSR.Adapter.scale_image(v1resFNaSR.images.other["bulb_on"], 231, 47)
@@ -246,7 +243,7 @@ init:
     image bg v1_checkpoint_FNaSR = v1FNaSR.Adapter.scale_image(v1resFNaSR.images.bg["v1_checkpoint"], 1920, 1080)
     image bg v1_ext_houses_night_FNaSR = v1resFNaSR.images.bg["ext_houses_night"]
     image bg v1_int_house_of_mt_sunset_parallax_FNaSR = v1FNaSRDisplay.Parallax(
-        displayable="images/bg/int_house_of_mt_sunset.jpg",
+        displayable=v1resFNaSR.images.es["int_house_of_mt_sunset"], # "images/bg/int_house_of_mt_sunset.jpg",
         zoom=1.15,
         anchor=(renpy.config.screen_width>>1, renpy.config.screen_height>>1),
         power=0.07,
@@ -255,7 +252,7 @@ init:
 
     default persistent.v1_recommendation_say_FNaSR = False
 
-    image v1_recommendation_FNaSR = v1resFNaSR.images.other["recommendation"]
+    image v1_recommendation_FNaSR = v1FNaSR.Adapter.scale_image(v1resFNaSR.images.other["recommendation"], 1024, 1024)
 
     #image v1_mod_button_text_FNaSR = At(Text("{unstable=(5, 2.5, v1_text_24_mod_button_FNaSR)}Пять Ночей в Совёнке Remaster{/unstable}", style="v1_text_24_mod_button_static_FNaSR"), v1_vhs_crt_shader_t_FNaSR(0.0175))
     #image v1_mod_button_text_FNaSR = Text("{unstable=(5, 2.5, v1_text_24_mod_button_FNaSR)}Пять Ночей в Совёнке Remaster{/unstable}", style="v1_text_24_mod_button_static_FNaSR")
