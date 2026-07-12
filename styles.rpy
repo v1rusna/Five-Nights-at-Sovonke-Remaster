@@ -1,7 +1,7 @@
 init 11:
-    $ v1_font_24_size_FNaSR = int(v1FNaSR.UtilsAdapter.scale(24))
-    $ v1_font_16_size_FNaSR = int(v1FNaSR.UtilsAdapter.scale(16))
-    $ v1_font_12_size_FNaSR = int(v1FNaSR.UtilsAdapter.scale(12))
+    $ v1_font_24_size_FNaSR = v1FNaSR.Adapter.scale_style(24)
+    $ v1_font_16_size_FNaSR = v1FNaSR.Adapter.scale_style(16)
+    $ v1_font_12_size_FNaSR = v1FNaSR.Adapter.scale_style(12)
 
     style v1_text_24_style_FNaSR:
         size v1_font_24_size_FNaSR

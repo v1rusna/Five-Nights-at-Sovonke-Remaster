@@ -23,6 +23,8 @@ init python in v1FNaSR:
             cls.REAL_HEIGHT = float(renpy.config.screen_height)
             #cls.REAL_WIDTH = float(1280)
             #cls.REAL_HEIGHT = float(720)
+            #cls.VIRTUAL_WIDTH = 1280
+            #cls.VIRTUAL_HEIGHT = 720
 
             scale_x = cls.REAL_WIDTH / cls.VIRTUAL_WIDTH
             scale_y = cls.REAL_HEIGHT / cls.VIRTUAL_HEIGHT
@@ -117,6 +119,14 @@ init python in v1FNaSR:
         def scale_image(cls, image, width, height):
             width, height = UtilsAdapter.size(width, height)
             return renpy.store.im.Scale(image, int(width), int(height))
+
+        @classmethod
+        def scale_style(cls, size):
+            scale_size = int(UtilsAdapter.scale(size))
+            if scale_size >= size:
+                return scale_size
+
+            return scale_size + size / 4
 
     class PAdapter(object):
         @classmethod

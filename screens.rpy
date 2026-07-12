@@ -1,6 +1,7 @@
 
 
 screen V1BaseUIScreenFNaSR:
+    key "K_a" action NullAction()
     key ["K_ESCAPE", "mouseup_3"] action ShowMenu("V1GameMenuSelectorFNaSR")
 
 # Главный экран
@@ -92,7 +93,7 @@ screen V1TabletAnimScreenFNaSR(game):
 screen V1DebugScreenFNaSR(game):
     #zorder 99
     #key "ctrl_K_a" action ShowMenu("V1DebugPanelScreenFNaSR")
-    key "K_a" action ShowMenu("V1DebugPanelScreenFNaSR")
+    key "K_a" action ShowMenu("V1DebugPanelScreenFNaSR", game)
 
     vbox:
         #text "Количество мусора: {}".format(len(renpy.gc.garbage)) style "v1_text_12_style_FNaSR"
@@ -117,11 +118,11 @@ screen V1DebugScreenFNaSR(game):
         textbutton"сбросить прогресс" background None text_style "v1_text_12_style_FNaSR" xalign .5 action SetField(v1FNaSR.Settings, "nights_gone", dict())
         textbutton"god mode: [game.god_mode]" background None text_style "v1_text_12_style_FNaSR" xalign .5 action SetField(game, "god_mode", not game.god_mode)
         hbox xalign .5:
-            textbutton"{size=+4}<<" background None text_style "v1_text_12_style_FNaSR" xalign .5 action Function(game.game_time.set_sleep_time, game.game_time._sleep_time-1)
-            textbutton"{size=+4}<" background None text_style "v1_text_12_style_FNaSR" xalign .5 action Function(game.game_time.set_sleep_time, game.game_time._sleep_time-.1)
-            textbutton str(game.game_time._sleep_time) background None text_style "v1_text_12_style_FNaSR" xalign .5
-            textbutton"{size=+4}>" background None text_style "v1_text_12_style_FNaSR" xalign .5 action Function(game.game_time.set_sleep_time, game.game_time._sleep_time+.1)
-            textbutton"{size=+4}>>" background None text_style "v1_text_12_style_FNaSR" xalign .5 action Function(game.game_time.set_sleep_time, game.game_time._sleep_time+1)
+            textbutton"{size=+4}<<" background None text_style "v1_text_12_style_FNaSR" xalign .5 action Function(game.game_time.set_sleep_time, game.game_time.sleep_time-1)
+            textbutton"{size=+4}<" background None text_style "v1_text_12_style_FNaSR" xalign .5 action Function(game.game_time.set_sleep_time, game.game_time.sleep_time-.1)
+            textbutton str(game.game_time.sleep_time) background None text_style "v1_text_12_style_FNaSR" xalign .5
+            textbutton"{size=+4}>" background None text_style "v1_text_12_style_FNaSR" xalign .5 action Function(game.game_time.set_sleep_time, game.game_time.sleep_time+.1)
+            textbutton"{size=+4}>>" background None text_style "v1_text_12_style_FNaSR" xalign .5 action Function(game.game_time.set_sleep_time, game.game_time.sleep_time+1)
 
 
 screen V1DebugPanelScreenFNaSR(game):
