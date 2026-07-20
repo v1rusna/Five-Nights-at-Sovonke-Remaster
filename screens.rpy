@@ -27,25 +27,33 @@ screen V1MainScreenFNaSR(game):
             action Function(game.camera_system.act_cameras)
         imagebutton:
             align (0.5, 0.9)
-            idle "v1_ui_monitor_button_FNaSR"#v1resFNaSR.images.other["FNaG_Monitor_Button"]
-            #action Function(game.camera_system.act_cameras)
+            idle "v1_ui_monitor_button_FNaSR"
 
 # Экран офиса
 screen V1OfficeScreenFNaSR(game):
+    default xsize_button = int(v1FNaSR.UtilsAdapter.scale(290))
+    default ysize_button = int(v1FNaSR.UtilsAdapter.scale(200))
+
     vbox align (0.98, 0.04):
         text "Night: [game.night_system.loaded.night]" style "v1_text_24_style_FNaSR" xalign 1.0
         if game.god_mode:
             text "Deaths: {}".format(game.deaths["all"]) style "v1_text_24_style_FNaSR" xalign 1.0
 
     if game.mainL.is_bulb and not game.camera_system.animation:
+        button:
+            align (0.25, 1.0)
+            background None
+            xsize xsize_button
+            ysize ysize_button
+            action Function(game.mainL.set_bulb, not game.mainL.bulb)
         imagebutton:
             align (0.25, 0.9)
-            idle ("v1_ui_bulb_on_FNaSR" if game.mainL.bulb else "v1_ui_bulb_off_FNaSR")#(v1resFNaSR.images.other["bulb_on"] if game.mainL.bulb else v1resFNaSR.images.other["bulb_off"])
-            action Function(game.mainL.set_bulb, not game.mainL.bulb)
+            idle ("v1_ui_bulb_on_FNaSR" if game.mainL.bulb else "v1_ui_bulb_off_FNaSR")
 
-    if game.mainL.is_door:
-        text game.door_system.get_text() style "v1_text_24_style_FNaSR" align (0.9, 0.4)
-        add game.door_system.door_ImageButton align (0.9, 0.5)
+    if game.mainL.is_door and not game.camera_system.animation:
+        text game.door_system.get_text() style "v1_text_24_style_FNaSR" align (0.9, 0.8)
+        add ("v1_ui_door_open_FNaSR" if game.door_system.is_door_open else "v1_ui_door_close_FNaSR") align (0.75, 0.9)
+        add game.door_system.door_ImageButton align (0.75, 1.0)
 
 # Экран камеры
 screen V1CamerasScreenFNaSR(game):
@@ -168,13 +176,13 @@ screen V1DebugPanelEnemyScreenFNaSR(game):
                     xalign 0.5
                     background None
                     text_style "v1_text_16_style_FNaSR"
-                    action Function(v1FNaSR._Screen._activities_all_pioneer, True)
+                    action Function(v1FNaSR.DebugInfo._activities_all_pioneer, True)
 
                 textbutton "{color=#e60000}Деактивировать всех":
                     xalign 0.5
                     background None
                     text_style "v1_text_16_style_FNaSR"
-                    action Function(v1FNaSR._Screen._activities_all_pioneer, False)
+                    action Function(v1FNaSR.DebugInfo._activities_all_pioneer, False)
 
                 for enemy in game.enemy_system:
                     if hasattr(enemy, "debug_info") and isinstance(enemy.debug_info, v1FNaSR.DebugInfo):

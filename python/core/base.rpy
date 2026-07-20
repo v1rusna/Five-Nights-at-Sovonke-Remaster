@@ -1,3 +1,4 @@
+
 init python in v1FNaSR:
     import threading
     import random
@@ -8,35 +9,84 @@ init python in v1FNaSR:
     import os
     import codecs
     import json
+    import sys
     from collections import deque
 
-    # Фолбек для Py2
+    if sys.version_info[0] == 2:
+        import __builtin__
+        native_str = __builtin__.str  # настоящий bytes-str, а не unicode из песочницы RenPy
+    else:
+        native_str = str
+
+    # --- Совместимость Py2/Py3 -------------------------------------------
+    # time.monotonic появился в Python 3.3, в Py2 его нет вовсе.
+    # Ловим именно AttributeError, а не всё подряд -- если что-то другое
+    # сломается внутри time, мы должны это увидеть, а не проглотить.
     try:
         monotime = time.monotonic
-    except:
+    except AttributeError:
         from time import time as monotime
 
+    # threading.RLock есть практически везде, но на некоторых урезанных
+    # платформах (например, кастомные Android-сборки) модуль threading
+    # может быть недоступен. DummyLock -- осознанный фолбек на этот случай,
+    # а не попытка скрыть реальную ошибку.
     try:
         lock = threading.RLock()
-    except:
+    except AttributeError:
         class DummyLock(object):
-            def acquire(self): pass
-            def release(self): pass
-            def __enter__(self): return self
-            def __exit__(self, *a): pass
+            def acquire(self):
+                pass
+
+            def release(self):
+                pass
+
+            def __enter__(self):
+                return self
+
+            def __exit__(self, *args):
+                pass
+
         lock = DummyLock()
 
     global_event = renpy.store.v1FNaSREvent
     display = renpy.store.v1FNaSRDisplay
     v1FNaSRThread = renpy.store.v1FNaSRThread
 
-    execute_in_main_thread = renpy.store.v1rus.execute_in_main_thread # Функция для исполнения кода в главном потоке (например взаимодействия с UI)
-
-    class FNaSRBase(renpy.python.RevertableObject):
-        def update(self): pass
-        def reset(self): pass
+    # Функция для исполнения кода в главном потоке (например, взаимодействия с UI)
+    execute_in_main_thread = renpy.store.v1rus.execute_in_main_thread
 
 
+    class FNaSRBase(renpy.object.Object):
+        """Базовый класс для всех объектов мода."""
+
+        def update(self):
+            pass
+
+        def reset(self):
+            pass
+
+
+    # === Иммутабельные контейнеры ==========================================
+    # Нужны там, где важно гарантировать, что константы мода нельзя случайно
+    # изменить во время игры (например, из консоли отладки или чужого кода).
+
+    def with_metaclass(meta, *bases):
+        """
+        Создаёт базовый класс с заданным метаклассом.
+        Работает одинаково в Python 2 и Python 3, без внешних зависимостей.
+        """
+        class metaclass(meta):
+            def __new__(cls, name, this_bases, namespace):
+                if this_bases is None:
+                    return type.__new__(cls, native_str(name), (), namespace)
+                return meta(native_str(name), bases, namespace)
+
+            @classmethod
+            def __prepare__(cls, name, this_bases):
+                return meta.__prepare__(native_str(name), bases)
+
+        return type.__new__(metaclass, native_str('temporary_class'), (), {})
 
     class _ReadOnly(FNaSRBase):
         def _readonly(self, *args, **kwargs):
@@ -99,7 +149,8 @@ init python in v1FNaSR:
         def __len__(self):
             return len(self._data)
 
-        add = remove = discard = pop = clear = update = difference_update = intersection_update = symmetric_difference_update = _ReadOnly._readonly
+        add = remove = discard = pop = clear = update = difference_update = \
+            intersection_update = symmetric_difference_update = _ReadOnly._readonly
 
         def __repr__(self):
             return repr(self._data)
@@ -118,6 +169,7 @@ init python in v1FNaSR:
             return repr(self._data)
 
     def freeze(value):
+        """Рекурсивно превращает изменяемые коллекции в их read-only аналоги."""
         if isinstance(value, dict):
             return ConstDict({k: freeze(v) for k, v in value.items()})
         if isinstance(value, (list, tuple)):
@@ -130,17 +182,19 @@ init python in v1FNaSR:
 
 
     class _ConstMeta(type):
+        """
+        Метакласс, замораживающий все атрибуты класса при его создании.
+        """
+
         def __new__(mcls, name, bases, namespace):
-            frozen = {}
-            for k, v in namespace.items():
-                frozen[k] = freeze(v)
+            frozen = dict((k, freeze(v)) for k, v in namespace.items())
             return type.__new__(mcls, name, bases, frozen)
 
         def __setattr__(cls, name, value):
             raise AttributeError("Constants are read-only")
 
-    class ConstantBase(FNaSRBase):
-        __metaclass__ = _ConstMeta
+    class ConstantBase(with_metaclass(_ConstMeta, FNaSRBase)):
+        pass
 
     class Constants(ConstantBase):
         DEFAULT_HOUR_TIME = 89
@@ -148,7 +202,7 @@ init python in v1FNaSR:
         DEFAULT_ROLLBACK_THRESHOLD = 10
         DEFAULT_UPDATE_STEP = 12
         KEYS = tuple((
-            #"up", "down", "left", "right", "enter", "escape",
+            # "up", "down", "left", "right", "enter", "escape",
             "q", "w", "e", "r", "t", "y", "u", "i", "o", "p",
             "a", "s", "d", "f", "g", "h", "j", "k", "l",
             "z", "x", "c", "v", "b", "n", "m",
@@ -159,16 +213,15 @@ init python in v1FNaSR:
         MAX_CHANGE_FACTOR_PENALTY = 50
 
     class ResultNight(ConstantBase):
-        LOSS=0
-        WIN=1
+        LOSS = 0
+        WIN = 1
 
 
-
-
-
-
+    # === Отладочная информация ============================================
 
     class DebugInfo(object):
+        """Контейнер отладочных данных, привязываемых к объекту (например, к врагу)."""
+
         def __init__(self, name=None, color=None, obj=None, additional_info=None):
             self.name = str(name)
             self.color = str(color)
@@ -187,7 +240,11 @@ init python in v1FNaSR:
         @staticmethod
         def _get_enemy_general_info(enemy):
             return [
-                "camera: {}({}/{})\n".format(enemy.enemy_path.get_camera_id_by_loc(), enemy.enemy_path.location, len(enemy.enemy_path)),
+                "camera: {}({}/{})\n".format(
+                    enemy.enemy_path.get_camera_id_by_loc(),
+                    enemy.enemy_path.location,
+                    len(enemy.enemy_path),
+                ),
                 "path: {}\n".format(repr(enemy.enemy_path.paths).replace("[", "[[")),
                 "difficulty: {}\n".format(enemy.difficulty),
                 "ai_level: {}\n".format(enemy.ai_level),
@@ -214,41 +271,33 @@ init python in v1FNaSR:
                 lines.append("{/color}")
 
             lines.append("---------------")
-
-            result = ""
-            for line in lines:
-                result += line
-            
-            return result.strip()
+            return "".join(lines).strip()
 
         @classmethod
         def generate_enemy_debug_text(cls, enemy):
             lines = ["{}\n".format(enemy.tag)]
             lines += cls._get_enemy_general_info(enemy)
             lines.append("---------------")
-
-            result = ""
-            for line in lines:
-                result += line
-            
-            return result.strip()
+            return "".join(lines).strip()
 
         @staticmethod
         def get_images():
-            result = []
-
             sl = renpy.display.core.scene_lists()
+            return [repr(i) for i in sl.get_all_displayables()]
 
-            for i in sl.get_all_displayables():
-                result.append(repr(i))
-
-            return result
+        @staticmethod
+        def _activities_all_pioneer(activity):
+            for enemy in game.enemy_system:
+                enemy.activity = activity
 
 
     def log(message):
-        try:
-            if not message.strip():
-                return
-            renpy.log("FNaSR | %s" % message)
-        except Exception:
-            pass
+        """
+        Логирует сообщение мода через renpy.log с префиксом "FNaSR | ".
+
+        message должен быть строкой. Пустые/пробельные сообщения
+        игнорируются осознанно (незачем засорять лог).
+        """
+        if not message.strip():
+            return
+        renpy.log("FNaSR | %s" % message)

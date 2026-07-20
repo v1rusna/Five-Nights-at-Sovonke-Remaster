@@ -10,8 +10,8 @@ init 5 python in v1FNaSR:
             self.__is_play_heartbeat = False
 
             self.door_ImageButton = renpy.store.v1rus.HoldingMouseImageButton(
-                idle=resources.images.other["button_unclick"],
-                clicked=resources.images.other["button_click"],
+                idle=renpy.store.Solid("#00000000", xsize=int(UtilsAdapter.scale(290)), ysize=int(UtilsAdapter.scale(200))),#"v1_ui_door_open_FNaSR",
+                clicked=renpy.store.Solid("#00000000", xsize=int(UtilsAdapter.scale(290)), ysize=int(UtilsAdapter.scale(200))),#"v1_ui_door_close_FNaSR",
                 click_action=renpy.store.Function(self.door, True),
                 unclick_action=renpy.store.Function(self.door, False),
                 allow_alternate=False

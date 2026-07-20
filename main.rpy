@@ -57,7 +57,7 @@ label v1_play_FNaSR(night=None):
     $ renpy.music.play(v1resFNaSR.sounds.sfx["tablet_close_1"], "sound")
     scene black
     show anim v1_tablet_close_entire_VNaSR
-    $ renpy.music.stop("v1_show_camera_ambience_FNaSR")
+    $ renpy.music.stop("music")
     $ renpy.pause(0.18, hard=True)
     hide anim v1_tablet_close_entire_VNaSR
     $ renpy.pause(.1, hard=True)

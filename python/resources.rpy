@@ -213,6 +213,13 @@ init 10 python in v1FNaSR:
     resources.init()
     renpy.store.v1resFNaSR = resources
 
+    for im_name in resources.images.bg.list_files():
+        resources.images.bg.add_file(im_name, Adapter.scale_image(resources.images.bg[im_name], 1920, 1080))
+
+
+
+
+
     renpy.music.register_channel("v1_camera_sfx_FNaSR", mixer="sound", loop=False)
     renpy.music.register_channel("v1_camera_random_sfx_FNaSR", mixer="sound", loop=False)
     renpy.music.register_channel("v1_screamer_sfx_FNaSR", mixer="sound", loop=False)
@@ -230,14 +237,13 @@ init 10 python in v1FNaSR:
 
     renpy.music.register_channel("sound2", mixer="sound", loop=False)
 
-    for im_name in resources.images.bg.list_files():
-        resources.images.bg.add_file(im_name, Adapter.scale_image(resources.images.bg[im_name], 1920, 1080))
-
-
-
 init 11:
 
     image v1_ui_monitor_button_FNaSR = v1FNaSR.Adapter.scale_image(v1resFNaSR.images.other["FNaG_Monitor_Button"], 537, 47)
+
+    image v1_ui_door_open_FNaSR = v1FNaSR.Adapter.scale_image(v1resFNaSR.images.other["button_unclick"], 231, 47)
+    image v1_ui_door_close_FNaSR = v1FNaSR.Adapter.scale_image(v1resFNaSR.images.other["button_click"], 231, 47)
+
     image v1_ui_bulb_on_FNaSR = v1FNaSR.Adapter.scale_image(v1resFNaSR.images.other["bulb_on"], 231, 47)
     image v1_ui_bulb_off_FNaSR = v1FNaSR.Adapter.scale_image(v1resFNaSR.images.other["bulb_off"], 231, 47)
 
